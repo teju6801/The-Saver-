@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    /* Donation Page CSS */
+    .donation-page {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .donation-page h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .donation-page form {
+      margin-top: 20px;
+    }
+
+    .donation-page label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .donation-page input[type="number"] {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    .donation-page select {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    .donation-page button[type="submit"] {
+      width: 100%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .donation-page button[type="submit"]:hover {
+      background-color: #3e8e41;
+    }
+
+    #donation-summary {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+    }
+
+    #donation-summary h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #donation-summary p {
+      margin-bottom: 10px;
+    }
+
+    #donation-summary span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Donation Page HTML -->
+  <div class="donation-page">
+    <h1>Support Our Charity</h1>
+    <p>Our charity is dedicated to making a difference in the lives of those in need. Your donation will help us
+      continue our mission.</p>
+    <form id="donation-form" action="/donate" method="post">
+      <label for="amount">Donation Amount:</label>
+      <input type="number" id="amount" name="amount" min="10" max="1000">
+      <label for="frequency">Donation Frequency:</label>
+      <select id="frequency" name="frequency">
+        <option value="one-time">One-Time</option>
+        <option value="monthly">Monthly</option>
+        <option value="quarterly">Quarterly</option>
+      </select>
+      <label for="payment-method">Payment Method:</label>
+      <select id="payment-method" name="payment-method">
+        <option value="credit-card">Credit Card</option>
+        <option value="paypal">PayPal</option>
+      </select>
+
+      <a href="/abc/abc.html">
+        <button type="submit">Donate Now</button>
+      </a>
+    </form>
+    <div id="donation-summary">
+      <h2>Donation Summary</h2>
+      <p>Donation Amount: <span id="donation-amount"></span></p>
+      <p>Donation Frequency: <span id="donation-frequency"></span></p>
+      <p>Payment Method: <span id="payment-method"></span></p>
+    </div>
+  </div>
+
+  <!-- 
+  <script>
+     // Donation Page JavaScript
+const donationForm = document.getElementById('donation-form');
+const donationAmount = document.getElementById('amount');
+const donationFrequency = document.getElementById('frequency');
+const paymentMethod = document.getElementById('payment-method');
+const donationSummary = document.getElementById('donation-summary');
+const donationAmountSpan = document.getElementById('donation-amount');
+const donationFrequencySpan = document.getElementById('donation-frequency');
+const paymentMethodSpan = document.getElementById('payment-method');
+
+donationForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const donationAmountValue = donationAmount.value;
+  const donationFrequencyValue = donationFrequency.value;
+  const paymentMethodValue = paymentMethod.value;
+  donationAmountSpan.textContent = donationAmountValue;
+  donationFrequencySpan.textContent = donationFrequencyValue;
+  paymentMethodSpan.textContent = paymentMethodValue;
+  donationSummary.style.display = 'block';
+});
+  </script> -->
+</body>
+
+</html>
