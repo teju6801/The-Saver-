@@ -55,22 +55,6 @@ cp .env.example .env.local
 
 **Edit `.env.local` with your credentials:**
 
-**Firebase** (Firebase Console → Project Settings → Your apps → Web SDK):
-```
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyAPXlNJeKkQ740hgHf3ucYtXb_rtmPzGNU  
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=dog-chairty.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=dog-chairty
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=dog-chairty.firebasestorage.app
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=867336568841
-NEXT_PUBLIC_FIREBASE_APP_ID=1:867336568841:web:e2354ef46d38bb78ec78d8
-```
-
-**Cloudinary** (Dashboard → Account Details):
-```
-CLOUDINARY_CLOUD_NAME=dcaxtwrjb
-CLOUDINARY_API_KEY=145952117923266  
-CLOUDINARY_API_SECRET=m-fBF89WMeTjNrk3DKstM5TLoPw
-```
 
 ### 3. Install Dependencies
 
