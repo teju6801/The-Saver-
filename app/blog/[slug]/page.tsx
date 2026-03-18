@@ -5,6 +5,7 @@ import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firesto
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Navbar from "@/components/Navbar";
 
 interface BlogPost {
   id: string;
@@ -41,8 +42,9 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
 
   if (loading) {
     return (
-      <div className='min-h-screen py-20 flex justify-center items-center'>
-        <div className='text-lg text-gray-500'>Loading post...</div>
+      <div className='min-h-screen flex items-center justify-center py-20'>
+        <Navbar />
+        <div className='body-primary'>Loading post...</div>
       </div>
     );
   }
@@ -64,7 +66,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
         <span className='inline-block px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-medium mb-6'>
           {post.category}
         </span>
-        <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 leading-tight'>
+        <h1 className='heading-1'>
           {post.title}
         </h1>
         <div className='text-sm text-gray-500'>

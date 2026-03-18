@@ -26,7 +26,7 @@ export default function LostFoundRow({ report }: { report: any }) {
         <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
           report.type === 'lost' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
         }`}>
-          {report.type.toUpperCase()}
+{report.type ? report.type.charAt(0).toUpperCase() + report.type.slice(1) : 'Unknown'}
         </span>
       </td>
       <td className='px-6 py-4'>{report.location}</td>

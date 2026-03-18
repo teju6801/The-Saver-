@@ -2,7 +2,7 @@ import { db } from "./firebase";
 import { collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 export const addDog = async (dogData: any) => {
-  const docRef = await addDoc(collection(db, "dogs"), dogData);
+  const docRef = await addDoc(collection(db, "dogs"), { ...dogData, status: "available" });
   return docRef.id;
 };
 

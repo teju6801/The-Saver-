@@ -24,11 +24,11 @@ export default function DogCard({ id, name, age, breed, image }: DogCardProps) {
 
       <div className="p-8 lg:p-10">
 
-        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 leading-tight group-hover/card:text-primary-600 transition-colors duration-400">
+        <h3 className="heading-3 text-gray-900 group-hover/card:text-primary-600 transition-colors duration-400">
           {name}
-        </h2>
+        </h3>
 
-        <p className="text-lg text-gray-600 mb-8 font-medium flex items-center gap-3">
+        <p className="body-secondary mb-8 font-medium flex items-center gap-3">
           <span className="w-2.5 h-2.5 bg-primary-400 rounded-full animate-pulse-slow" />
           {age} • {breed}
         </p>

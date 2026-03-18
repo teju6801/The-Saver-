@@ -19,13 +19,13 @@ export default function DogGallery() {
   );
 });
   return (
-    <section className="section lg:section">
+    <section className="pt-0 lg:section">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
         {/* Search + Filter */}
 
-        <div className="max-w-4xl mx-auto mb-16 lg:mb-24">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <div className="max-w-4xl mx-auto mb-4 lg:mb-8">
+          <div className="flex flex-col lg:flex-row gap-6 pb-6">
 
             <input
               type="text"

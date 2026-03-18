@@ -64,21 +64,21 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="lg:hidden border-t border-gray-200/50 pt-4 pb-4 space-y-2 backdrop-blur-sm">
-            <Link href="/" className="block px-4 py-3 text-lg font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
+            <Link href="/" className="block px-4 py-3 text-sm md:text-base font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
               Home
             </Link>
-            <Link href="/adopt" className="block px-4 py-3 text-lg font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
+            <Link href="/adopt" className="block px-4 py-3 text-sm md:text-base font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
               Adopt
             </Link>
-            <Link href="/blog" className="block px-4 py-3 text-lg font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
+            <Link href="/blog" className="block px-4 py-3 text-sm md:text-base font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
               Blog
             </Link>
-            <Link href="/lost-found" className="block px-4 py-3 text-lg font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
+            <Link href="/lost-found" className="block px-4 py-3 text-sm md:text-base font-medium text-gray-700 hover:bg-orange-50 rounded-xl transition-all">
               Lost & Found
             </Link>
             <Link
               href="/donate"
-              className="block px-4 py-3 text-white bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl hover:from-orange-600 hover:to-orange-700 font-bold shadow-md hover:shadow-lg transition-all text-lg"
+              className="btn-primary block px-4 py-3 h-fit"
             >
               Donate
             </Link>

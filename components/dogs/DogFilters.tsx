@@ -19,11 +19,11 @@ export default function DogFilters() {
   }
 
   return (
-    <div className="flex flex-wrap gap-4 mb-6">
+    <div className="flex flex-wrap gap-3 mb-4">
 
       <select
         onChange={(e) => updateFilter("breed", e.target.value)}
-        className="border rounded px-3 py-2 text-sm"
+        className="input-field text-sm"
         defaultValue=""
       >
         <option value="">All Breeds</option>

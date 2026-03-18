@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+
+
+const inter = Inter({ subsets: ["latin"] });
+
+<body className={inter.className}></body>
+
 // Inter font loaded via Google Fonts in globals.css
 
 export const metadata: Metadata = {

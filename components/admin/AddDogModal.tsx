@@ -12,27 +12,44 @@ export default function AddDogModal({ onClose }: { onClose: () => void }) {
   const [breed, setBreed] = useState("");
   const [age, setAge] = useState("");
   const [story, setStory] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-
-
-  
+const [file, setFile] = useState<File | null>(null);
+const [uploading, setUploading] = useState(false);
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
+  setUploading(true);
 
-  const dogData = {
-    name,
-    breed,
-    age,
-    story,
-    createdAt: Date.now()
-  };
+  try {
+    let imageUrl = '';
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const uploadData = await uploadRes.json();
+      if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed');
+      imageUrl = uploadData.url;
+    }
 
-  await addDog(dogData);
+    const dogData = {
+      name,
+      breed,
+      age,
+      story,
+      imageUrl,
+      createdAt: Date.now()
+    };
 
-  alert("Dog added successfully");
-
-  onClose();
+    await addDog(dogData);
+    alert("Dog posted successfully for adoption!");
+    onClose();
+  } catch (error) {
+    alert(`Error: ${(error as Error).message}`);
+  } finally {
+    setUploading(false);
+  }
 };
   return (
     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -40,7 +57,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         <div className="p-10 lg:p-12">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-4xl lg:text-5xl font-semibold text-gray-900">
-              Add New Dog
+              Post New Dog for Adoption
             </h2>
             <button
               onClick={onClose}
@@ -110,7 +127,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 type="submit"
                 className="btn-primary text-xl py-8 w-full sm:w-auto flex-1 font-semibold"
               >
-                Add Dog to Shelter
+                {uploading ? 'Posting...' : 'Post Dog for Adoption'}
               </button>
             </div>
 

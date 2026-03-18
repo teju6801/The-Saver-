@@ -16,11 +16,16 @@ type Donation = {
   utr?: string;
 };
 
+import Navbar from "@/components/Navbar";
+
 export default function DonatePage() {
+
   const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(""); 
+
   const [utr, setUtr] = useState("");
   const [qr, setQr] = useState("");
+
   const [totalRaised, setTotalRaised] = useState(0);
   const [donors, setDonors] = useState<Donation[]>([]);
 
@@ -28,11 +33,13 @@ export default function DonatePage() {
 
   // Generate QR
   const generateQR = async (value?: number) => {
+
     const donationAmount = value ?? Number(amount);
 
     if (!donationAmount) return;
 
-    const upiLink = `upi://pay?pa=yoursaver@upi&pn=Dog Rescue&am=${donationAmount}&cu=INR`;
+    const upiLink =
+      `upi://pay?pa=yoursaver@upi&pn=Dog Rescue&am=${donationAmount}&cu=INR`;
 
     const qrCode = await QRCode.toDataURL(upiLink);
 
@@ -42,8 +49,9 @@ export default function DonatePage() {
 
   // Save donation
   const saveDonation = async () => {
+
     if (!name.trim() || !amount || !utr.trim()) {
-      alert("Please fill Name, Amount, UTR to submit");
+      alert("Please fill Name, Amount, and UTR");
       return;
     }
 
@@ -68,12 +76,14 @@ export default function DonatePage() {
 
   // Fetch donations
   const fetchDonations = async () => {
+
     const snapshot = await getDocs(collection(db, "donations"));
 
     let sum = 0;
     const donorList: Donation[] = [];
 
     snapshot.forEach((doc) => {
+
       const data = doc.data() as Donation;
 
       sum += data.amount || 0;
@@ -82,6 +92,7 @@ export default function DonatePage() {
         donorName: data.donorName,
         amount: data.amount,
       });
+
     });
 
     setTotalRaised(sum);
@@ -96,142 +107,178 @@ export default function DonatePage() {
 
   return (
     <section className="section py-28">
-      <div className="page-container flex flex-col items-center space-y-16 lg:space-y-20">
-  
-        <div className="text-center max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 to-primary-600 bg-clip-text text-transparent mb-6">
+
+      <div className="page-container flex flex-col items-center space-y-16">
+
+        {/* Title */}
+        <div className="text-center max-w-3xl">
+
+          <h1 className="heading-1 mb-6">
             Support Dog Rescue
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Every donation saves a life. Join hundreds of supporters giving stray dogs hope.
+
+          <p className="body-primary text-gray-600">
+            Every donation helps save stray dogs.
           </p>
+
         </div>
 
-        {/* Progress Card */}
-        <div className="card w-full max-w-2xl text-center p-10 lg:p-12">
-          <div className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        {/* Progress */}
+        <div className="card w-full max-w-xl text-center p-8">
+
+          <div className="text-3xl font-bold">
             ₹{totalRaised.toLocaleString()}
           </div>
-          <p className="text-lg text-gray-600 mb-8">
+
+          <p className="text-gray-600 mb-6">
             of ₹{goal.toLocaleString()} goal
           </p>
-          <div className="progress-bar mb-4">
-            <div 
-              className="progress-fill" 
+
+          <div className="w-full bg-gray-200 h-3 rounded-full mb-3">
+
+            <div
+              className="bg-orange-500 h-3 rounded-full"
               style={{ width: `${progress}%` }}
             />
+
           </div>
-          <p className="text-lg font-semibold text-gray-700">
-            {Math.round(progress)}% complete
-          </p>
+
+          <p>{Math.round(progress)}% complete</p>
+
         </div>
 
-        {/* Main Donation Form */}
-        <div className="card w-full max-w-lg p-10 lg:p-12 text-center space-y-8">
-          
-          <div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
-              Donate via UPI
-            </h2>
-            <p className="text-xl text-gray-600">
-              Scan QR code with your UPI app (GPay, PhonePe, Paytm)
-            </p>
-          </div>
+        {/* Donation Card */}
+        <div className="card w-full max-w-lg p-8 space-y-6 text-center">
 
-          {/* Donor Name */}
+          <h2 className="text-2xl font-bold">
+            Donate via UPI
+          </h2>
+
           <input
             type="text"
+            placeholder="Your Name"
             className="form-input text-center"
-            placeholder="Your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
-          {/* Quick Donate Buttons */}
-          <div className="grid grid-cols-3 gap-4">
-            <button onClick={() => generateQR(100)} className="btn-primary h-14 text-lg font-semibold">₹100</button>
-            <button onClick={() => generateQR(500)} className="btn-primary h-14 text-lg font-semibold">₹500</button>
-            <button onClick={() => generateQR(1000)} className="btn-primary h-14 text-lg font-semibold">₹1000</button>
+          {/* Quick Amount */}
+          <div className="grid grid-cols-3 gap-3">
+
+            <button
+              onClick={() => generateQR(100)}
+              className="btn-primary"
+            >
+              ₹100
+            </button>
+
+            <button
+              onClick={() => generateQR(500)}
+              className="btn-primary"
+            >
+              ₹500
+            </button>
+
+            <button
+              onClick={() => generateQR(1000)}
+              className="btn-primary"
+            >
+              ₹1000
+            </button>
+
           </div>
 
-          {/* Custom Amount */}
           <input
             type="number"
             min="10"
-            className="form-input text-center text-2xl"
-            placeholder="Custom amount"
+            className="form-input text-center"
+            placeholder="Custom Amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
 
-          {/* UTR */}
-          <div>
-            <input
-              type="text"
-              className="form-input text-center"
-              placeholder="Transaction ID / UTR (required after payment)"
-              value={utr}
-              onChange={(e) => setUtr(e.target.value)}
-            />
-            <p className="text-xs text-gray-500 mt-2 text-center">
-              Find UTR in your UPI app payment history
-            </p>
-          </div>
-
           <button
             onClick={() => generateQR()}
             disabled={!amount}
-            className="w-full btn-primary text-lg h-14"
+            className="btn-primary w-full"
           >
-            {amount ? `Generate ₹${Number(amount).toLocaleString()} QR` : 'Enter Amount'}
+            Generate QR
           </button>
 
-          {/* QR + Submit */}
+          {/* QR */}
           {qr && (
-            <div className="card p-8 space-y-6">
-              <div className="w-72 h-72 mx-auto bg-white p-4 rounded-2xl shadow-xl">
-                <img src={qr} alt="UPI QR Code" className="w-full h-full" />
-              </div>
-              <p className="text-lg text-gray-700 font-medium">
+
+            <div className="space-y-4">
+
+              <img
+                src={qr}
+                alt="UPI QR"
+                className="w-64 mx-auto"
+              />
+
+              <p>
                 Scan to pay ₹{Number(amount).toLocaleString()}
               </p>
-              <button
-                onClick={saveDonation}
-                disabled={!name.trim() || !utr.trim()}
-                className="w-full btn-success text-lg h-14"
-              >
-                ✅ Submit Donation Details
-              </button>
+
             </div>
+
           )}
+
+          {/* UTR */}
+          <input
+            type="text"
+            placeholder="Transaction ID / UTR"
+            className="form-input text-center"
+            value={utr}
+            onChange={(e) => setUtr(e.target.value)}
+          />
+
+          <button
+            onClick={saveDonation}
+            disabled={!name.trim() || !utr.trim()}
+            className="btn-success w-full"
+          >
+            Submit Donation Details
+          </button>
 
         </div>
 
         {/* Recent Donors */}
-        <div className="card w-full max-w-2xl p-10 lg:p-12">
-          <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 text-center">
+        <div className="card w-full max-w-xl p-8">
+
+          <h3 className="text-2xl font-bold text-center mb-6">
             ❤️ Recent Supporters
           </h3>
-          <div className="divide-y divide-gray-100">
-            {donors.map((donor, i) => (
-              <div key={i} className="flex justify-between items-center py-4">
-                <span className="text-lg font-semibold text-gray-900">
-                  {donor.donorName || "Anonymous"}
-                </span>
-                <span className="text-2xl font-bold bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">
-                  +₹{donor.amount?.toLocaleString()}
-                </span>
-              </div>
-            ))}
-            {donors.length === 0 && (
-              <p className="text-center py-12 text-xl text-gray-500">
-                Be our first supporter today! 🐶❤️
-              </p>
-            )}
-          </div>
+
+          {donors.map((donor, i) => (
+
+            <div
+              key={i}
+              className="flex justify-between py-3"
+            >
+
+              <span>
+                {donor.donorName || "Anonymous"}
+              </span>
+
+              <span>
+                ₹{donor.amount?.toLocaleString()}
+              </span>
+
+            </div>
+
+          ))}
+
+          {donors.length === 0 && (
+            <p className="text-center text-gray-500">
+              Be the first supporter ❤️
+            </p>
+          )}
+
         </div>
 
       </div>
+
     </section>
   );
 }

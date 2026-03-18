@@ -1,76 +1,58 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
-import { useMapEvents, useMap } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import dynamic from 'next/dynamic';
 
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
-);
-
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
-);
-
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-
-interface LocationPickerMapProps {
+interface Props {
   setPosition: (pos: { lat: number; lng: number }) => void;
   center?: [number, number];
 }
 
-function ChangeMapCenter({ center }: { center?: [number, number] }) {
-  const map = useMap();
-
-  useEffect(() => {
-    if (center) {
-      map.setView(center, 15);
+export default dynamic({
+  loader: async () => {
+    const leaflet = await import('leaflet');
+    if (typeof window !== 'undefined') {
+      // Add leaflet.css to head dynamically
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+      
+      delete (leaflet.Icon.Default.prototype as any)._getIconUrl;
+      leaflet.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+      });
     }
-  }, [center, map]);
 
-  return null;
-}
+    const { MapContainer, TileLayer, Marker, useMapEvents } = await import('react-leaflet');
+    
+    function ClickHandler({ setPosition }: { setPosition: (pos: { lat: number; lng: number }) => void }) {
+      useMapEvents({
+        click: (e: any) => setPosition({ lat: e.latlng.lat, lng: e.latlng.lng })
+      });
+      return null;
+    }
 
-function LocationMarker({
-  setPosition,
-}: {
-  setPosition: (pos: { lat: number; lng: number }) => void;
-}) {
-  const [position, setLocalPosition] = useState<[number, number] | null>(null);
+    function LocationPickerMap({ setPosition, center }: Props) {
+      return (
+        <div className='relative h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl border'>
+          <MapContainer 
+            center={center || [20.5937, 78.9629]} 
+            zoom={14} 
+            style={{ width: '100%', height: '100%' }}
+          >
+            <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+            <ClickHandler setPosition={setPosition} />
+            {center && <Marker position={center} />}
+          </MapContainer>
+        </div>
+      );
+    }
 
-  useMapEvents({
-    click(e) {
-      const { lat, lng } = e.latlng;
-      setLocalPosition([lat, lng]);
-      setPosition({ lat, lng });
-    },
-  });
+    return LocationPickerMap;
+  },
+  ssr: false,
+  loading: () => <div className='h-[400px] bg-gray-200 rounded-2xl flex items-center justify-center'><p>Loading map...</p></div>,
+});
 
-  return position ? <Marker position={position} /> : null;
-}
-
-export default function LocationPickerMap({
-  setPosition,
-  center = [19.076, 72.877],
-}: LocationPickerMapProps) {
-  return (
-    <div className="h-[400px] w-full rounded-xl overflow-hidden mb-6">
-      <MapContainer center={center} zoom={11} style={{ height: "100%", width: "100%" }}>
-        <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        <ChangeMapCenter center={center} />
-
-        <LocationMarker setPosition={setPosition} />
-      </MapContainer>
-    </div>
-  );
-}
