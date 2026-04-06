@@ -1,17 +1,28 @@
 "use client";
 
-import { deleteDog, markAdopted } from "@/lib/dogs";
+import { deleteDog, markAdopted } from '@/lib/dogs';
 
 export default function DogRow({ dog }: any) {
-
   const handleDelete = async () => {
-    if (confirm("Delete this dog?")) {
-      await deleteDog(dog.id);
+    if (confirm('Delete this dog?')) {
+      try {
+        await deleteDog(dog.id);
+        alert('Dog deleted successfully!');
+      } catch (error: any) {
+        console.error('Delete error:', error);
+        alert('Failed to delete dog: ' + (error.message || 'Unknown error'));
+      }
     }
   };
 
   const handleAdopted = async () => {
-    await markAdopted(dog.id);
+    try {
+      await markAdopted(dog.id);
+      alert('Dog marked as adopted successfully!');
+    } catch (error: any) {
+      console.error('Mark adopted error:', error);
+      alert('Failed to mark dog as adopted: ' + (error.message || 'Unknown error'));
+    }
   };
 
   return (

@@ -14,10 +14,12 @@ export default function DogCard({ id, name, age, breed, image }: DogCardProps) {
     <div className="card group/card">
       <div className="relative w-full h-64 lg:h-80 overflow-hidden rounded-t-2xl">
         <Image
-          src={image}
+          src={image.replace(/\?.*$/, '') + (image.startsWith('/dogs/') ? `?t=${Date.now()}` : '')}
           alt={name}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover/card:scale-110"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-primary-600/30 via-transparent to-transparent" />
       </div>

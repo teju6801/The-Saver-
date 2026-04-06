@@ -29,8 +29,9 @@ export default function DogsPage() {
           <div key={dog.id} className="border rounded-lg p-4 bg-white">
 
             <img
-              src={dog.image || "/dog-placeholder.jpg"}
+              src={`${dog.image || "/dog-placeholder.jpg"}?t=${Date.now()}`}
               className="w-full h-48 object-cover rounded"
+              alt={dog.name}
             />
 
             <h2 className="text-lg font-medium mt-3">

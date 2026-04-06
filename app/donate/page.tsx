@@ -26,6 +26,12 @@ export default function DonatePage() {
   const [utr, setUtr] = useState("");
   const [qr, setQr] = useState("");
 
+  const [errors, setErrors] = useState({
+    name: "",
+    amount: "",
+    utr: "",
+  });
+
   const [totalRaised, setTotalRaised] = useState(0);
   const [donors, setDonors] = useState<Donation[]>([]);
 
@@ -49,11 +55,13 @@ export default function DonatePage() {
 
   // Save donation
   const saveDonation = async () => {
-
-    if (!name.trim() || !amount || !utr.trim()) {
-      alert("Please fill Name, Amount, and UTR");
-      return;
-    }
+    const newErrors = {
+      name: !name.trim() ? "Name is required" : "",
+      amount: !amount ? "Amount is required" : "",
+      utr: !utr.trim() ? "Transaction ID is required" : "",
+    };
+    setErrors(newErrors);
+    if (Object.values(newErrors).some(error => error)) return;
 
     await addDoc(collection(db, "donations"), {
       donorName: name,
@@ -154,13 +162,20 @@ export default function DonatePage() {
             Donate via UPI
           </h2>
 
-          <input
-            type="text"
-            placeholder="Your Name"
-            className="form-input text-center"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <div className="space-y-1">
+            <input
+              type="text"
+              placeholder="Your Name *"
+              className={`form-input text-center \${errors.name ? 'border-red-500 ring-2 ring-red-200 focus:ring-red-300' : ''}`}
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setErrors(prev => ({...prev, name: ''}));
+              }}
+              required
+            />
+            {errors.name && <p className="text-red-500 text-sm text-center">{errors.name}</p>}
+          </div>
 
           {/* Quick Amount */}
           <div className="grid grid-cols-3 gap-3">
@@ -188,14 +203,21 @@ export default function DonatePage() {
 
           </div>
 
-          <input
-            type="number"
-            min="10"
-            className="form-input text-center"
-            placeholder="Custom Amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+          <div className="space-y-1">
+            <input
+              type="number"
+              min="10"
+              className={`form-input text-center \${errors.amount ? 'border-red-500 ring-2 ring-red-200 focus:ring-red-300' : ''}`}
+              placeholder="Custom Amount *"
+              value={amount}
+              onChange={(e) => {
+                setAmount(e.target.value);
+                setErrors(prev => ({...prev, amount: ''}));
+              }}
+              required
+            />
+            {errors.amount && <p className="text-red-500 text-sm text-center">{errors.amount}</p>}
+          </div>
 
           <button
             onClick={() => generateQR()}
@@ -225,18 +247,25 @@ export default function DonatePage() {
           )}
 
           {/* UTR */}
-          <input
-            type="text"
-            placeholder="Transaction ID / UTR"
-            className="form-input text-center"
-            value={utr}
-            onChange={(e) => setUtr(e.target.value)}
-          />
+          <div className="space-y-1">
+            <input
+              type="text"
+              placeholder="Transaction ID / UTR *"
+              className={`form-input text-center \${errors.utr ? 'border-red-500 ring-2 ring-red-200 focus:ring-red-300' : ''}`}
+              value={utr}
+              onChange={(e) => {
+                setUtr(e.target.value);
+                setErrors(prev => ({...prev, utr: ''}));
+              }}
+              required
+            />
+            {errors.utr && <p className="text-red-500 text-sm text-center">{errors.utr}</p>}
+          </div>
 
           <button
             onClick={saveDonation}
-            disabled={!name.trim() || !utr.trim()}
-            className="btn-success w-full"
+            disabled={Object.values(errors).some(e => e)}
+            className={`w-full py-3 rounded-xl font-bold transition-all \${Object.values(errors).some(e => e) ? 'bg-gray-400 cursor-not-allowed text-gray-700' : 'btn-success hover:shadow-lg'}`}
           >
             Submit Donation Details
           </button>

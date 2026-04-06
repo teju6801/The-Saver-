@@ -8,6 +8,11 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    localPatterns: [
+      {
+        pathname: '/dogs/**'
+      }
+    ],
   },
 };
 

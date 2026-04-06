@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react"
-import { collection, getDocs, query, where } from "firebase/firestore"
+"use client"
+
+import { useEffect, useState, useRef, useCallback } from "react"
+import { collection, onSnapshot, query, where } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { Dog } from "@/types/dog"
 
@@ -12,37 +14,54 @@ interface Filters {
 export function useDogs(filters?: Filters) {
   const [dogs, setDogs] = useState<Dog[]>([])
   const [loading, setLoading] = useState(true)
+  const unsubscribeRef = useRef<(() => void) | null>(null)
 
-  useEffect(() => {
-    async function fetchDogs() {
-      let q = query(collection(db, "dogs"))
+  const fetchDogs = useCallback(() => {
+    // Cleanup previous listener
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current()
+    }
 
-      if (filters?.breed) {
-        q = query(q, where("breed", "==", filters.breed))
-      }
+    let q = query(collection(db, "dogs"))
 
-      if (filters?.age) {
-        q = query(q, where("age", "==", filters.age))
-      }
+    if (filters?.breed) {
+      q = query(q, where("breed", "==", filters.breed))
+    }
 
-      if (filters?.adopted) {
-        const adopted = filters.adopted === "true"
-        q = query(q, where("adopted", "==", adopted))
-      }
+    if (filters?.age) {
+      q = query(q, where("age", "==", filters.age))
+    }
 
-      const snapshot = await getDocs(q)
+    if (filters?.adopted !== undefined) {
+      const adopted = filters.adopted === "true"
+      q = query(q, where("status", "==", adopted ? "adopted" : "available"))
+    }
 
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const results: Dog[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Dog[]
 
       setDogs(results)
+      if (loading) setLoading(false)  // Only set false once
+    }, (error) => {
+      console.error("Error fetching dogs:", error)
       setLoading(false)
-    }
+    })
 
+    unsubscribeRef.current = unsubscribe
+  }, [filters, loading])
+
+  useEffect(() => {
     fetchDogs()
-  }, [filters])
+    
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current()
+      }
+    }
+  }, [fetchDogs])
 
   return { dogs, loading }
 }
